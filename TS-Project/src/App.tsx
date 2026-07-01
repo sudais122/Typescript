@@ -1,5 +1,6 @@
-import {  useState } from 'react'
+import { useState } from 'react'
 import './App.css'
+
 
 type User = {
   name: string,
@@ -7,120 +8,161 @@ type User = {
   CNIC?: string
 }
 
+
 type Admin = {
   isadmin: boolean,
-  adminid: number
+  adminid: number,
   adminMessage: string
 }
 
-type NewUser = User & Admin;
+
+type NewUser = User & Admin
+
+
+
+const Userpass = "userpassword"
+const Adminpass = "adminpass"
+
+
 
 const App = () => {
 
-  const [user, setuser] = useState<NewUser[]>([])
-  const [login, setlogin] = useState<boolean>(false)
 
-  const loginuser = () => {
+  const [users, setUsers] = useState<NewUser[]>([])
 
-    setuser([
+  const [login, setLogin] = useState(false)
+
+  const [password, setPassword] = useState("")
+
+
+  const loginUser = () => {
+
+    setUsers([
       {
-        name: 'M Sudais',
+        name: "M Sudais",
         age: 20,
-        CNIC: '1630195345650',
+        CNIC: "1630195345650",
         isadmin: false,
         adminid: 12,
         adminMessage: ""
       },
+
       {
-        name: 'M Ali',
+        name: "M Ali",
         age: 21,
-        CNIC: '16195345650',
+        CNIC: "16195345650",
         isadmin: true,
         adminid: 123,
         adminMessage: "Admin Console"
       }
+
     ])
-    setlogin(true);
+
+    setLogin(true)
+
   }
 
-  function logout() {
-    setlogin(false);
-    setuser([])
+
+
+  const logout = () => {
+
+    setUsers([])
+    setLogin(false)
+    setPassword("")
+
   }
+
 
 
   return (
-    <div className="container">
-      <button
-        className="btn"
-        onClick={login ? logout : loginuser}
-      >
 
-        {login ? "Logout" : "Login"}
-
-      </button>
+    <div>
 
 
+      {
+        !login &&
 
-      <div className="users">
-        {
-          user.length > 0 ?
+        <button onClick={loginUser}>
+          Login
+        </button>
 
-            user.map((item, index) => (
-              <>              <div
-                className={`card ${item.isadmin ? "admin" : ""}`}
-                key={index}
-              >
-
-                <h1>{item.name}</h1>
-
-                <p>
-                  <b>Age:</b> {item.age}
-                </p>
-
-                <p>
-                  <b>CNIC:</b> {item.CNIC}
-                </p>
+      }
 
 
-                {
-                  item.isadmin ?
 
-                    <div className="admin-box">
+      {
+        login &&
 
-                      <h3>ADMIN</h3>
+        <>
 
-                      <p>
-                        Admin ID: {item.adminid}
-                      </p>
+          <input
+            type="password"
+            placeholder="enter password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-                      <p>
-                        {item.adminMessage}
-                      </p>
 
-                    </div>
 
-                    :
+          {
+            password === Userpass &&
 
-                    <p className="normal">
-                      Normal User
-                    </p>
+            users
+              .filter(user => !user.isadmin)
+              .map(user => (
 
-                }
-              </div>
-              </>
+                <div key={user.name}>
 
-            ))
-            :
+                  <h1>{user.name}</h1>
+                  <h2>{user.age}</h2>
+                  <h3>{user.CNIC}</h3>
 
-            <h2>No User</h2>
+                </div>
+              ))
 
-        }
+          }
 
-      </div>
+
+
+          {
+            password === Adminpass &&
+
+            users
+              .filter(user => user.isadmin)
+              .map(user => (
+
+                <div key={user.name}>
+
+                  <h1>{user.name}</h1>
+                  <h2>{user.age}</h2>
+
+                  <h3>
+                    Admin ID: {user.adminid}
+                  </h3>
+
+                  <h4>
+                    {user.adminMessage}
+                  </h4>
+
+                </div>
+
+              ))
+
+          }
+
+
+          <button onClick={logout}>
+            Logout
+          </button>
+
+        </>
+
+      }
+
 
     </div>
+
   )
+
 }
 
 
